@@ -1,0 +1,26 @@
+{% extends "layout_v2.html" %}
+
+{% block content %}
+<form method="POST" class="login100-form validate-form">
+    {{ form.hidden_tag() }}
+            <div class="form-group"></div>
+            {{ form.message.label() }}
+            {% if form.message.errors %}
+                {{ form.message(class="form-control form-control-lg is-invalid", rows=5) }}
+                <div class="invalid-feedback">
+                    {% for error in form.message.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.message(class="form-control form-control-lg") }}
+            {% endif %}
+
+            <div class="row">
+                <div class="col d-flex justify-content-end">
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+            </div>
+</form>
+
+{% endblock %}

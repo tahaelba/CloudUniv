@@ -1,0 +1,9 @@
+{% extends "layout_v2.html" %}
+{% block content %}
+    <h2>I want an account for </h2><br>
+    <a class="btn btn-primary btn-lg btn-block" href="{{ url_for('users.register_student') }}">Student</a>
+    <a class="btn btn-primary btn-lg btn-block" href="{{ url_for('users.register_professor') }}">Professor</a>
+    <a class="btn btn-primary btn-lg btn-block" href="{{ url_for('users.register_entity') }}">Entity</a>
+
+
+{% endblock content %}

@@ -1,0 +1,118 @@
+{% extends "layout_v2.html" %}
+{% block content %}
+<div class="row">
+    <div class="card z-depth-3">
+    <div class="card-body">
+    <ul class="nav nav-pills nav-pills-primary nav-justified">
+        <li class="nav-item">
+            <a href="javascript:void();" data-target="#profile" data-toggle="pill" class="nav-link active show"><i class="icon-user"></i> <span class="hidden-xs">Profile</span></a>
+        </li>
+
+
+    </ul>
+    <div class="tab-content p-3">
+
+        <div class="text-center text-sm-right">
+            {% if current_user.role == 'Student' %}
+              <span class="badge badge-primary"> {{ current_user.role }} </span>
+            {% else%}
+              {% if current_user == 'Entity' %}
+                <span class="badge badge-danger"> {{ current_user.role }} </span>
+              {% else %}
+              <span class="badge badge-warning"> {{ current_user.role }} </span>
+              {% endif %}
+
+            {% endif %}
+            <div class="text-muted"><small>Joined {{user.last_login.strftime('%d-%h-%Y')}}</small></div>
+        </div>
+
+        {% if user != current_user %}
+                <a class="btn btn-primary" href="{{ url_for('users.send_message', id=user.id) }}">{{ 'Send private message' }}</a> 
+                {% if user.role != 'Professor' and user.role != 'Entity' and current_user.role != 'Student' %}
+                <a class="btn btn-success" href="{{ url_for('users.recommend',id=user.id) }}"> {{ 'Recommend' }}</a>
+                {% endif %}
+        {% endif %}
+
+        <div class="tab-pane active show" id="profile">
+        
+            <div class="row">
+                <div class="col-md-6">
+                </br>
+                    <h4>About Me</h4>
+                        <p align="justify" > {{ user.about }}</p>
+                </br>
+                {% if user.recom_recept.count() != 0 %}
+                <h4>Recommendations</h4>
+                {% for recom in user.recom_recept %}
+
+                <div id="accordion">
+                    <div class="card">
+                      <div class="card-header" id="headingOne">
+                        <h5 class="mb-0">
+                          <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            {{ recom.recommender.firstname }} {{ recom.recommender.lastname }}
+                          </button>
+                        </h5>
+                        <a class="mr-2" href="{{ url_for('users.user_posts', id=recom.recommender_id) }}">Visit Profile</a>
+                      </div>
+                      <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                        <div class="card-body">
+                        <div class="text-muted"><small>{{ recom.recommender.departement }}</small></div>
+                          <h5 class="card-title">Skill : {{ recom.skill }} </h5>
+                          <p class="card-text"> {{ recom.comment }}</p>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+
+                {% endfor %} 
+                {% endif %}
+                </br>
+                </div>
+                
+                <div class="col-md-6">
+                    <h4>Skills </h4>
+                </br>
+                    {% for skill in skills %}
+                    <button type="button" class="btn btn-success btn-sm m-1" data-toggle="modal" data-target="#deleteModal">{{ skill.skill }}</button>
+                   
+                    {% endfor %}
+                    {% if user.id ==current_user.id %}
+                    <a class="btn btn-light" href="{{ url_for('users.add_skill', id = current_user.id) }}">Add Skill</a>
+                    {% endif %}
+                    <hr>
+                    <span class="badge badge-primary"><i class="fa fa-user"></i> 900 Followers</span>
+                    <span class="badge badge-success"><i class="fa fa-cog"></i> 43 Forks</span>
+                    <span class="badge badge-danger"><i class="fa fa-eye"></i> 245 Views</span>
+                </div>
+                </br>
+                <h4>Latest Posts</h4>
+                <div class="col-md-12">
+  
+                    {% for post in posts.items %}                                
+                
+                        
+                        <ul class="timeline">
+                            <li>
+                                <a href="{{ url_for('posts.post', post_id=post.id) }}" href="">{{post.title}}</a>
+                                <div class="text-muted h7 mb-2"> <i class="fa fa-clock-o"></i> {{ post.date_posted.strftime('%d-%h-%Y') }} </div>
+                                <p> {{ post.content[:150] }} ...</p>
+                            </li>
+                        </ul>
+                    
+                    {% endfor %}
+
+                </div>
+            
+            <!--/row-->
+        </div>
+        
+    </div>
+</div>
+</div>
+</div>
+</div>
+
+
+{% endblock content %}
+  

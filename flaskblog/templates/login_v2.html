@@ -1,0 +1,73 @@
+{% extends "layout_v2.html" %}
+{% block content %}
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="wrap-login100">
+				<div class="login100-form-title" style="background-image: url(static/images/bg-01.jpg);">
+					<span class="login100-form-title-1">
+						Sign In
+					</span>
+				</div>
+
+				<form method="POST" class="login100-form validate-form">
+					{{ form.hidden_tag() }}
+					<div class="wrap-input100 validate-input m-b-26">
+						{{ form.email.label(class="label-input100") }}
+						{% if form.email.errors %}
+                       		{{ form.email(class="input100 is-invalid") }}
+                        	<div class="invalid-feedback">
+                            	{% for error in form.email.errors %}
+                                	<span >{{ error }}</span>
+                            	{% endfor %}
+                        	</div>
+						{% else %}
+							{{ form.email(class="input100") }}
+						{% endif %}
+						<span class="focus-input100"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input m-b-18">
+						{{ form.password.label(class="label-input100") }}
+						{% if form.password.errors %}
+                       		{{ form.password(class="input100 is-invalid") }}
+                        	<div class="invalid-feedback">
+                            	{% for error in form.password.errors %}
+                                	<span>{{ error }}</span>
+                            	{% endfor %}
+                        	</div>
+						{% else %}
+							{{ form.password(class="input100") }}
+						{% endif %}
+						<span class="focus-input100"></span>
+					</div>
+
+					<div class="flex-sb-m w-full p-b-30">
+						<div class="contact100-form-checkbox">
+							{{ form.remember(class="input-checkbox100") }}
+                    		{{ form.remember.label(class="label-checkbox100") }}
+						</div>
+
+						<div>
+							<small class="text-muted ml-2">
+								<a href="{{ url_for('users.reset_request') }}">Forgot Password?</a>
+							</small>
+						</div>
+					</div>
+					<div class="container-login100-form-btn">
+						{{ form.submit(class="login100-form-btn") }}
+					</div>
+					
+				</form>
+				
+			</div>
+			
+		</div>
+		
+	</div>
+	<div class="border-top pt-3">
+        <small class="text-muted">
+            Need An Account? <a class="ml-2" href="{{ url_for('users.register') }}">Sign Up Now</a>
+        </small>
+    </div>
+	
+{% endblock content %}

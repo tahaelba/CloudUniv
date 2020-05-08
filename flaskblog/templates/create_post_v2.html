@@ -1,0 +1,91 @@
+{% extends "layout_v2.html"%}
+{% block content%}
+<div class="col">
+    <div class="row">
+      <div class="col mb-3">
+        <div class="card">
+          <div class="card-body">
+            <form class="form" method="POST" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+            <div class="e-profile">
+              <div class="row">
+                <div class="col-12 col-sm-auto mb-3">
+                  <div class="mx-auto" style="width: 140px;">
+                    <div class="d-flex justify-content-center align-items-center rounded" style="margin-left: 30px;">
+                        <img class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col d-flex flex-column flex-sm-row justify-content-between mb-3">
+                  <div class="text-center text-sm-left mb-2 mb-sm-0">
+                    <h4 class="pt-sm-2 pb-1 mb-0 text-nowrap"> {{ current_user.firstname }} {{ current_user.lastname }} </h4>
+                    <p class="mb-0"> {{ current_user.email }} </p>
+
+                  </div>
+                  <div class="text-center text-sm-right">
+                    <span class="badge badge-secondary">{{ current_user.role }}</span>
+                    <div class="text-muted"><small>Joined {{current_user.last_login.strftime('%d-%h-%Y')}}</small></div>
+                  </div>
+                </div>
+              </div>
+              <ul class="nav nav-tabs">
+                <li class="nav-item"><a href="" class="active nav-link">Post</a></li>
+              </ul>
+              <div class="tab-content pt-3">
+                <div class="tab-pane active">
+                    <div class="row">
+                      <div class="col">
+                        <div class="row">
+                          <div class="col">
+                            <div class="form-group">
+                                {{ form.title.label(class="form-control-label") }}
+                                    {% if form.title.errors %}
+                                    {{ form.title(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                    {% for error in form.title.errors %}
+                                    <span>{{ error }}</span>
+                                    {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.title(class="form-control form-control-lg") }}
+                                {% endif %}                            
+                            </div>
+                          
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col mb-3">
+                            <div class="form-group">
+                                {{ form.content.label(class="form-control-label") }}
+                                {% if form.content.errors %}
+                                    {{ form.content(class="form-control form-control-lg is-invalid", rows=5) }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.content.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.content(class="form-control form-control-lg") }}
+                                {% endif %}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col d-flex justify-content-end">
+                        {{ form.submit(class="btn btn-primary") }}
+                      </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock content %}

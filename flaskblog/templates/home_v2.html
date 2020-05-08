@@ -1,0 +1,87 @@
+{% extends "layout_v2.html" %}
+{% block content %}
+    {% for post in posts.items %}
+    <div class="card gedf-card">
+      <div class="card-header">
+          <div class="d-flex justify-content-between align-items-center">
+              <div class="d-flex justify-content-between align-items-center">
+                  <div class="mr-2">
+                      <img class="rounded-circle" width="45" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}" alt="">
+                  </div>
+                  <div class="ml-2">
+                      <div class="h5 m-0"><a href="{{ url_for('users.user_posts', id=post.author.id) }}"> {{ post.author.firstname }} {{ post.author.lastname }} </a></div>
+                  </div>
+              </div>
+              <div>
+                {% if post.author == current_user %}
+                  <div class="dropdown">
+                      <button class="btn btn-link dropdown-toggle" type="button" id="gedf-drop1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <i class="fa fa-ellipsis-h"></i>
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="gedf-drop1">
+                          <div class="h6 dropdown-header">My Post</div>
+                            <a class="dropdown-item" href="{{ url_for('posts.update_post', post_id=post.id) }}">Edit</a>
+                            <button type="button" class="dropdown-item" data-toggle="modal" data-target="#deleteModal">Delete</button>
+                      </div>
+                  </div>
+                {% endif %}
+              </div>
+          </div>
+
+      </div>
+      <div class="card-body">
+          <div class="text-muted h7 mb-2"> <i class="fa fa-clock-o"></i> {{ post.date_posted.strftime('%d-%h-%Y') }} </div>
+          <a class="card-link" href="{{ url_for('posts.post', post_id=post.id) }}">
+              <h5 class="card-title"> {{ post.title }} </h5>
+          </a>
+
+          <p class="card-text"> {{ post.content[:250] }} ...</p>
+          <div>
+              <span class="badge badge-primary">JavaScript</span>
+              <span class="badge badge-primary">Android</span>
+              <span class="badge badge-primary">PHP</span>
+              <span class="badge badge-primary">Node.js</span>
+              <span class="badge badge-primary">Ruby</span>
+              <span class="badge badge-primary">Python</span>
+          </div>
+      </div>
+      <div class="card-footer">
+       
+          <a href="{{ url_for('posts.post', post_id=post.id) }}" class="btn btn-primary">View Post </a>
+          {{ post.likes.count() }}       Application(s)
+          
+        </div>
+      <!-- Delete Modal -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Delete Post?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <form action="{{ url_for('posts.delete_post', post_id=post.id) }}" method="POST">
+            <input class="btn btn-danger" type="submit" value="Delete">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  </div>
+    {% endfor %}
+    {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+      {% if page_num %}
+        {% if posts.page == page_num %}
+          <a class="btn btn-info mb-4" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>
+        {% else %}
+          <a class="btn btn-outline-info mb-4" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>
+        {% endif %}
+      {% else %}
+        ...
+      {% endif %}
+    {% endfor %}
+{% endblock content %}

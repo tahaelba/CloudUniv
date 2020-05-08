@@ -1,0 +1,45 @@
+{% extends "layout_v2.html" %}
+
+{% block content %}
+<h1>{{'Messages' }}</h1>
+<div class="email-app mb-4">
+    <main class="inbox">
+        {% for message  in messages %}
+        <ul class="messages">
+            <li class="message">
+                <a href="#">
+                    <div class="header">
+                    {% if message.author == current_user %}
+                        <span class="from"><a class="btn btn-link" href="{{ url_for('users.profile', id=message.author.id) }}"> You  to   </a> <a class="btn btn-link" href="{{ url_for('users.profile', id=message.recipient.id) }}">{{ message.recipient.firstname }} {{ message.recipient.lastname }}</a></span>
+                    {% else %}
+                        <span class="from"><a class="btn btn-link" href="{{ url_for('users.profile', id=message.recipient.id) }}"> {{ message.recipient.firstname }} {{ message.recipient.lastname + "  to" }}</a> <a class="btn btn-link" href="{{ url_for('users.profile', id=message.author.id) }}"> You </a></span>
+                    {% endif %}
+                        <span class="date">{{ message.timestamp.strftime('%d-%h-%Y at  %H:%M') }} </span>
+                    </div>
+                    <div class="description">
+                        <p class="article-content">{{ message.body }}</p>
+                    </div>
+                </a>
+            </li>
+        </ul>
+        {% endfor %}
+    </main>
+</div>
+    <nav aria-label="...">
+        <ul class="pager">
+            <li class="previous{% if not prev_url %} disabled{% endif %}">
+                <a href="{{ prev_url or '#' }}">
+                    <span aria-hidden="true">&larr;</span> {{ ('Newer messages') }}
+                </a>
+            </li>
+            <li class="next{% if not next_url %} disabled{% endif %}">
+                <a href="{{ next_url or '#' }}">
+                    {{ ('Older messages') }} <span aria-hidden="true">&rarr;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+{% endblock %}
+
+
+

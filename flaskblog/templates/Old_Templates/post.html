@@ -1,0 +1,100 @@
+{% extends "layout_v2.html" %}
+{% block content %}
+  <article class="media content-section">
+    <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
+    <div class="media-body">
+      <div class="article-metadata">
+        <a class="mr-2" href="{{ url_for('users.user_posts', id=post.author.id) }}">{{ post.author.firstname }} {{ post.author.lastname }}</a>
+        <small class="text-muted">{{ post.date_posted.strftime('%d-%m-%Y') }}</small>
+      </div>
+      {% if post.author == current_user %}
+          <div>
+            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('posts.update_post', post_id=post.id) }}">Update</a>
+            <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
+          </div>
+      {% endif %}
+      <h2 class="article-title">{{ post.title }}</h2>
+      <p class="article-content">{{ post.content }}</p>
+      {% if current_user != post.author  %}
+              {% if current_user.has_liked_post(post) %}
+              <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#cancelModal">Cancel Application</button>
+              {% else %}
+              <button type="button" class="btn btn-success btn-sm m-1" data-toggle="modal" data-target="#applyModal">Apply</button>
+              {% endif %}
+      {% endif %}
+      {{ post.likes.count() }} Application(s)
+    </div>
+  </article>
+  {% if post.likes.count() != 0  %}
+        <h4>List Of Candidates</h4>
+        {% for like in post.likes %}
+              <article class="media content-section">
+                  <div class="article-metadata">
+                    <a class="mr-2" href="{{ url_for('users.profile', id=like.user_id) }}">{{ like.user.firstname }} {{ like.user.lastname }}</a>
+                    <p class="article-content">{{ like.user.departement }}</p>
+                  </div>
+              </article>
+        {% endfor %}
+  {% endif %}
+
+  <!-- Delete Modal -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Delete Post?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <form action="{{ url_for('posts.delete_post', post_id=post.id) }}" method="POST">
+            <input class="btn btn-danger" type="submit" value="Delete">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Apply Modal -->
+  <div class="modal fade" id="applyModal" tabindex="-1" role="dialog" aria-labelledby="applyModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="applyModalLabel">Apply for this offer?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <form action="{{ url_for('posts.like_action', post_id=post.id, action='apply') }}" method="POST">
+            <input class="btn btn-success" type="submit" value="Apply">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- cancel application -->
+  <div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="cancelModalLabel">Do you want to cancel your application?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <form action="{{ url_for('posts.like_action', post_id=post.id, action='cancel') }}" method="POST">
+            <input class="btn btn-danger" type="submit" value="Cancel">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}
