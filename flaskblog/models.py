@@ -16,9 +16,9 @@ class User(db.Model, UserMixin):
     firstname = db.Column(db.String(40),  nullable=False)
     lastname = db.Column(db.String(40),  nullable=False)
     birthday = db.Column(db.DateTime, nullable=False)
-    location = db.Column(db.String(),  nullable=True,default=None)
-    departement = db.Column(db.String(150),  nullable=True,default=None)
-    about = db.Column(db.String(),  nullable=False, default='My Bio')
+    location = db.Column(db.String(150),  nullable=True,default=None)
+    departement = db.Column(db.String(120),  nullable=True,default=None)
+    about = db.Column(db.String(150),  nullable=False, default='My Bio')
     year = db.Column(db.String(5),default=None)
     company = db.Column(db.String(150),  nullable=True,default=None)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -105,7 +105,7 @@ class Skill(db.Model):
 
 class Recommendation(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    comment = db.Column(db.String(), nullable=False)
+    comment = db.Column(db.String(120), nullable=False)
     skill = db.Column(db.String(120), nullable=False)
     recommender_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     recommended_id = db.Column(db.Integer, db.ForeignKey('user.id'))
