@@ -19,7 +19,7 @@ class User(db.Model, UserMixin):
     location = db.Column(db.String(150),  nullable=True,default=None)
     departement = db.Column(db.String(120),  nullable=True,default=None)
     about = db.Column(db.String(150),  nullable=False, default='My Bio')
-    year = db.Column(db.String(5),default=None)
+    year = db.Column(db.String(50),default=None)
     company = db.Column(db.String(150),  nullable=True,default=None)
     email = db.Column(db.String(120), unique=True, nullable=False)
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
