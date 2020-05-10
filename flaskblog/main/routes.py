@@ -18,24 +18,21 @@ def home():
 def studentsposts(): 
     if not current_user.is_authenticated:
         return redirect(url_for('users.login'))
-    page = request.args.get('page', 1, type=int)
-    posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=7)
+    posts = Post.query.order_by(Post.date_posted.desc())
     return render_template('studentposts.html', posts=posts)
 
 @main.route("/professorsposts")
 def professorsposts(): 
     if not current_user.is_authenticated:
         return redirect(url_for('users.login'))
-    page = request.args.get('page', 1, type=int)
-    posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=7)
+    posts = Post.query.order_by(Post.date_posted.desc())
     return render_template('professorposts.html', posts=posts)
 
 @main.route("/entitiesposts")
 def entitiesposts(): 
     if not current_user.is_authenticated:
         return redirect(url_for('users.login'))
-    page = request.args.get('page', 1, type=int)
-    posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=7)
+    posts = Post.query.order_by(Post.date_posted.desc())
     return render_template('entityposts.html', posts=posts)
 
 
