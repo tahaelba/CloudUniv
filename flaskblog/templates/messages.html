@@ -7,19 +7,17 @@
         {% for message  in messages %}
         <ul class="messages">
             <li class="message">
-                <a href="#">
                     <div class="header">
                     {% if message.author == current_user %}
-                        <span class="from"><a class="btn btn-link" href="{{ url_for('users.profile', id=message.author.id) }}"> You  to   </a> <a class="btn btn-link" href="{{ url_for('users.profile', id=message.recipient.id) }}">{{ message.recipient.firstname }} {{ message.recipient.lastname }}</a></span>
+                        <span class="from"><a class="btn btn-link" href="{{ url_for('users.user_posts', id=message.author.id) }}">You</a> To <a class="btn btn-link" href="{{ url_for('users.user_posts', id=message.recipient.id) }}">{{ message.recipient.firstname }} {{ message.recipient.lastname }}</a></span>
                     {% else %}
-                        <span class="from"><a class="btn btn-link" href="{{ url_for('users.profile', id=message.recipient.id) }}"> {{ message.recipient.firstname }} {{ message.recipient.lastname + "  to" }}</a> <a class="btn btn-link" href="{{ url_for('users.profile', id=message.author.id) }}"> You </a></span>
+                        <span class="from"><a class="btn btn-link" href="{{ url_for('users.user_posts', id=message.author.id) }}"> {{ message.author.firstname }} {{ message.author.lastname}}</a> To <a class="btn btn-link" href="{{ url_for('users.user_posts', id=message.recipient.id) }}">You</a></span>
                     {% endif %}
                         <span class="date">{{ message.timestamp.strftime('%d-%h-%Y at  %H:%M') }} </span>
                     </div>
                     <div class="description">
                         <p class="article-content">{{ message.body }}</p>
                     </div>
-                </a>
             </li>
         </ul>
         {% endfor %}
