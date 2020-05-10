@@ -156,7 +156,7 @@ def recommend(id):
 
 @users.route('/user/<id>')
 @login_required
-def user_posts(id):
+def user_posts(id): 
     page = request.args.get('page', 1, type=int)
     user = User.query.filter_by(id=id).first_or_404()
     skills = Skill.query.filter_by(user_id=id).all()
