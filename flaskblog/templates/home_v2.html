@@ -37,13 +37,10 @@
 
           <p class="card-text"> {{ post.content[:250] }} ...</p>
           <div>
-              <span class="badge badge-primary">JavaScript</span>
-              <span class="badge badge-primary">Android</span>
-              <span class="badge badge-primary">PHP</span>
-              <span class="badge badge-primary">Node.js</span>
-              <span class="badge badge-primary">Ruby</span>
-              <span class="badge badge-primary">Python</span>
-          </div>
+           {% for skill in t[post.id] %}
+            <span class="badge badge-primary">{{ skill.skill }}</span>
+            {% endfor %}
+	  </div>
       </div>
       <div class="card-footer">
        

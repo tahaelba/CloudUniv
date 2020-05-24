@@ -2,8 +2,8 @@ from flask import (render_template, url_for, flash,
                    redirect, request, abort, Blueprint)
 from flask_login import current_user, login_required
 from flaskblog import db
-from flaskblog.models import Post,PostLike
-from flaskblog.posts.forms import PostForm
+from flaskblog.models import Post,PostLike,SkillPost
+from flaskblog.posts.forms import PostForm,SkillRequiredForm
 
 posts = Blueprint('posts', __name__)
 
@@ -16,16 +16,35 @@ def new_post():
         post = Post(title=form.title.data, content=form.content.data, author=current_user)
         db.session.add(post)
         db.session.commit()
-        flash('Your post has been created!', 'success')
-        return redirect(url_for('main.home'))
+        return redirect(url_for('posts.add_skills', id = post.id))
     return render_template('create_post_v2.html', title='New Post',
                            form=form, legend='New Post')
 
 
+@posts.route("/post/skills/<int:id>", methods=['GET', 'POST'])
+@login_required
+def add_skills(id):
+    form = SkillRequiredForm()
+    skills = SkillPost.query.filter_by(post_id=id).all()
+    post = Post.query.get_or_404(id)
+    if post.author != current_user:
+        abort(403)
+    if form.validate_on_submit():
+        skill = SkillPost(skill=form.skill.data, post_id=id)
+        db.session.add(skill)
+        db.session.commit()
+        skills = SkillPost.query.filter_by(post_id=id).all()
+        form.skill.data = None
+        return render_template('postskills.html',form=form,post=post,title = 'New Post',skills=skills)
+    
+    return render_template('postskills.html',form=form,post = post , title = 'New Post',skills=skills)    
+    
+    
 @posts.route("/post/<int:post_id>")
 def post(post_id):
     post = Post.query.get_or_404(post_id)
-    return render_template('post_v2.html', title=post.title, post=post)
+    skills = SkillPost.query.filter_by(post_id=post_id).all()
+    return render_template('post_v2.html', title=post.title, post=post,skills = skills)
 
 
 #####################################

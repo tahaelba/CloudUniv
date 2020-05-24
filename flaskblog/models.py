@@ -89,6 +89,7 @@ class Post(db.Model):
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     likes = db.relationship('PostLike', backref='post', lazy='dynamic')
+    tags = db.relationship('SkillPost', backref='taged', lazy='dynamic')
 
     def __repr__(self):
         return f"Post('{self.title}', '{self.date_posted}')"
@@ -102,6 +103,11 @@ class Skill(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     skill = db.Column(db.String(120), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+class SkillPost(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    skill = db.Column(db.String(120), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
 
 class Recommendation(db.Model):
     id = db.Column(db.Integer, primary_key=True)

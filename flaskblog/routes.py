@@ -228,3 +228,54 @@ def reset_token(token):
         flash('Your password has been updated! You are now able to log in', 'success')
         return redirect(url_for('login'))
     return render_template('reset_token.html', title='Reset Password', form=form)
+
+@users.route('/send_message/<id>', methods=['GET', 'POST'])
+@login_required
+def send_message(id):
+    user = User.query.filter_by(id=id).first_or_404()
+    form = MessageForm()
+    if form.validate_on_submit():
+        msg = Message(author=current_user, recipient=user,
+                      body=form.message.data)
+        db.session.add(msg)
+        db.session.commit()
+        flash('Your message has been sent.','success')
+        return redirect(url_for('users.user_posts', id=id))
+    return render_template('send_message.html', title=('Send Message'),
+                           form=form, recipient=user)
+
+@users.route('/messages')
+@login_required
+def messages():
+    current_user.last_message_read_time = datetime.utcnow()
+    db.session.commit()
+    page = request.args.get('page', 1, type=int)
+    messages = db.session.query.filter(and_(or_(Message.sender_id==current_user.id, Message.recipient_id==current_user.id) , or_(Message.sender_id==current_user.id, Message.recipient_id==current_user.id))).order_by(
+        Message.timestamp.desc()).paginate(page=page, per_page=15)
+    next_url = url_for('users.messages', page=messages.next_num) \
+        if messages.has_next else None
+    prev_url = url_for('users.messages', page=messages.prev_num) \
+        if messages.has_prev else None
+    return render_template('messages.html', messages=messages.items,
+                           next_url=next_url, prev_url=prev_url)
+
+@users.route('/chatting/<id>', methods=['GET', 'POST'])
+@login_required
+def chatting(id):
+    current_user.last_message_read_time = datetime.utcnow()
+    db.session.commit()
+    user = User.query.filter_by(id=id).first_or_404()
+    form = MessageForm()
+    seen = []
+    if form.validate_on_submit():
+        msg = Message(author=current_user, recipient=user,
+                    body=form.message.data)
+        db.session.add(msg)
+        db.session.commit()
+    messages = db.session.query(Message).filter(and_(or_(Message.sender_id==current_user.id, Message.recipient_id==current_user.id) , or_(Message.sender_id==current_user.id, Message.recipient_id==current_user.id))).order_by(
+        Message.timestamp.desc())
+    if user==current_user:
+        messid = messages
+    else:
+        messid = [message for message in messages if (message.author == current_user and message.recipient == user) or (message.author == user and message.recipient == current_user) ]
+    return render_template('chat_room_v2.html', messages=messages, form=form, seen=seen, messid = messid)

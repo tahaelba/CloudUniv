@@ -36,12 +36,9 @@
 
       <p class="card-text"> {{ post.content }} </p>
       <div>
-          <span class="badge badge-primary">JavaScript</span>
-          <span class="badge badge-primary">Android</span>
-          <span class="badge badge-primary">PHP</span>
-          <span class="badge badge-primary">Node.js</span>
-          <span class="badge badge-primary">Ruby</span>
-          <span class="badge badge-primary">Python</span>
+      {% for skill in skills %}
+            <span class="badge badge-primary">{{ skill.skill }}</span>
+      {% endfor %}
       </div>
   </div>
   <div class="card-footer">
