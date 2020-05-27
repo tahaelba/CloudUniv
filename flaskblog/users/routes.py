@@ -275,7 +275,7 @@ def chatting(id):
     messages = db.session.query(Message).filter(and_(or_(Message.sender_id==current_user.id, Message.recipient_id==current_user.id) , or_(Message.sender_id==current_user.id, Message.recipient_id==current_user.id))).order_by(
         Message.timestamp.desc())
     if user==current_user:
-        messid = messages
+        messid = None
     else:
         messid = [message for message in messages if (message.author == current_user and message.recipient == user) or (message.author == user and message.recipient == current_user) ]
     return render_template('chat_room_v2.html', messages=messages, form=form, seen=seen, messid = messid)
